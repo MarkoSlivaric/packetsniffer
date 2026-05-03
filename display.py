@@ -9,16 +9,16 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 
-__PROTO_COLORS = {
+PROTO_COLORS = {
     "TCP" : "#dff0d8",
     "UDP" : "#d9edf7",
-    "ICMP" : "fcf8e3",
+    "ICMP" : "#fcf8e3",
     "ARP" : "#f2dede",
     "Other" : "#f5f5f5"
 }
 
-_COLUMNS = ( "No", "Time", "Source IP", "Dest IP", "Src Port", "Dist Port", "Protocol", "Lenght")
-_COL_WIDTHS = {"No" : 45, "Time" : 75, "Source IP" : 130, "Dest IP" : 130, "Src Port" : 70, "Dist Port" : 70, "Protocol" : 70, "Lenght" : 60}
+_COLUMNS = ( "No", "Time", "Source IP", "Dest IP", "Src Port", "Dest Port", "Protocol", "Length")
+_COL_WIDTHS = {"No" : 45, "Time" : 75, "Source IP" : 130, "Dest IP" : 130, "Src Port" : 70, "Dest Port" : 70, "Protocol" : 70, "Length" : 60}
 
 class Display:
     def __init__(self, parent):
@@ -27,10 +27,10 @@ class Display:
         self._make_gui()
 
     def _make_gui(self):
-        tk.Label(self.parent, text = "Packets", font=("Arial", 12, "bold")).pack()
-        table_frame = tk.Frame(self.parent)
+        tk.Label(self.parent, text = "Packets", font=("Arial", 12, "bold"), bg="#3498db", fg="white", pady=5).pack(fill=tk.X)
+        table_frame = tk.Frame(self.parent, bg="white")
         table_frame.pack(fill=tk.BOTH, expand=True)
-        scroll_y = ttk.Scrollback(table_frame, orient = tk.VERTICAL)
+        scroll_y = ttk.Scrollbar(table_frame, orient = tk.VERTICAL)
         scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
         self.table = ttk.Treeview(table_frame, columns = _COLUMNS, show="headings", height=15, yscrollcommand = scroll_y.set)
 
@@ -38,12 +38,12 @@ class Display:
         for col in _COLUMNS:
             self.table.heading(col, text=col)
             self.table.column(col, width = _COL_WIDTHS[col], anchor=tk.CENTER)
-        for proto, color in __PROTO_COLORS.items():
+        for proto, color in PROTO_COLORS.items():
             self.table.tag_configure(proto, background=color)
         self.table.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.table.bind("<<TreeviewSelect>>", self._clicked)
-        tk.Label(self.parent, text="Packet Details", font=("Arial", 12, "bold")).pack()
-        self.details = scrolledtext.ScrolledText(self.parent, height=15, font=("Courier", 9))
+        tk.Label(self.parent, text="Packet Details", font=("Arial", 12, "bold"), bg="#3498db", fg="white", pady=5).pack(fill=tk.X)
+        self.details = scrolledtext.ScrolledText(self.parent, height=15, font=("Courier", 9), bg="white", fg="black")
         self.details.pack(fill=tk.BOTH, expand=True)
         
     def add_packet(self, num, src, dst, proto, time_rel="", length="", src_port="",dst_port="", original_idx = None ):
@@ -54,7 +54,7 @@ class Display:
                   src_port if src_port != "" else "-",
                   dst_port if dst_port != "" else "-",
                   proto, length)
-        proto_tag = proto if proto in __PROTO_COLORS else "Other"
+        proto_tag = proto if proto in PROTO_COLORS else "Other"
         self.table.insert("", tk.END, values=values, tags=(proto_tag, str(original_idx)))
 
     def clear_table(self):
@@ -76,12 +76,12 @@ class Display:
             ascii_part = "".join(chr(b) if 32 <= b <= 126 else "." for b in chunk)
             self.details.insert(tk.END, f"{i:04x} {hex_part:<47} {ascii_part}\n")
 
-    def _clicicked(self, event):
+    def _clicked(self, event):
         sel = self.table.selection()
         if not sel or not self.click_callback:
             return
         tags = self.table.item(sel[0], "tags")
-        if len(tags) >2:
+        if len(tags) >1:
             original_idx = int(tags[1])
         else:
             original_idx = int(self.table.item(sel[0])["values"][0]) -1

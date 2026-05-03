@@ -32,7 +32,7 @@ part copied from ther last repository
 '''
         proto_row = tk.Frame(filter_box)
         proto_row.pack(fill=tk.X, padx=5, pady=3)
-        tk.Label(proto_row, text="Protocol:", width=10, anchor="W").pack(side=tk.LEFT)
+        tk.Label(proto_row, text="Protocol:", width=10, anchor="w").pack(side=tk.LEFT)
         self.protocol = tk.StringVar(value="All")
         tk.OptionMenu(proto_row, self.protocol, "All", "TCP", "UDP", "ICMP", "ARP").pack(side=tk.LEFT)
         
@@ -97,20 +97,20 @@ part copied from ther last repository
         counts = {"TCP": 0, "UDP": 0, "ICMP": 0, "ARP": 0, "Other": 0}
         for p in packets:
             if p.haslayer(TCP):
-                counts[TCP] += 1
+                counts["TCP"] += 1
             elif p.haslayer(UDP):
-                counts[UDP] += 1
+                counts["UDP"] += 1
             elif p.haslayer(ICMP):
-                counts[ICMP] += 1
+                counts["ICMP"] += 1
             elif p.haslayer(ARP):
-                counts[ARP] += 1
+                counts["ARP"] += 1
             else:
                 counts["OTHERS"] += 1
-            self.stats.insert(tk.END, "Protocol Breakdown:\n")
-            self.stats.insert(tk.END, "-" * 24 + "\n")
-            for proto, cnt in counts.items():
-                pct = cnt / total * 100
-                self.stats.insert(tk.END, f" {proto:<6}: {cnt:>5}  ({pct:.1f}%)\n")
+        self.stats.insert(tk.END, "Protocol Breakdown:\n")
+        self.stats.insert(tk.END, "-" * 24 + "\n")
+        for proto, cnt in counts.items():
+            pct = cnt / total * 100
+            self.stats.insert(tk.END, f" {proto:<6}: {cnt:>5}  ({pct:.1f}%)\n")
                 
     def apply(self):
         if self.apply_callback:

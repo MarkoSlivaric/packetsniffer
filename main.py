@@ -19,7 +19,6 @@ class App:
         self.root = root
         self.root.title("Packet Sniffer")
         self.root.geometry("1400x760")
-        ttk.Style().theme_use("calm")
 
         self.capture = Capture()
         self._setup_gui()
