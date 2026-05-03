@@ -89,7 +89,7 @@ class App:
             src,
             dst,
             proto,
-            rel_time=rel_time,
+            time_rel=rel_time,
             length=length,
             src_port=src_port,
             dst_port=dst_port,
