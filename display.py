@@ -23,11 +23,11 @@ from tkinter import ttk, scrolledtext
 #Keys must match the strings produced by capture.py / main.py._proto()
 
 PROTO_COLORS = {
-    "TCP" : "#dff0d8", #light green
-    "UDP" : "#d9edf7", #light blue
-    "ICMP" : "#fcf8e3", #light yellow
-    "ARP" : "#f2dede", #light red
-    "Other" : "#f5f5f5" #light grey
+    "TCP": "#1f7a1f",   # dark green
+    "UDP": "#1f4e79",   # dark blue
+    "ICMP": "#8a6d1d",  # dark yellow/brown
+    "ARP": "#7a1f1f",   # dark red
+    "Other": "#444444"  # dark gray
 }
 
 #Column order for the packet tavle
@@ -79,7 +79,14 @@ class Display:
         #Header label for the details panel
         tk.Label(self.parent, text="Packet Details", font=("Arial", 12, "bold"), bg="#3498db", fg="white", pady=5).pack(fill=tk.X)
         #Monospace font so the hex dump columns line up correctly
-        self.details = scrolledtext.ScrolledText(self.parent, height=15, font=("Courier", 9), bg="white", fg="black")
+        self.details = scrolledtext.ScrolledText(
+            self.parent,
+            height=15,
+            font=("Courier New", 10),
+            bg="#0f172a",
+            fg="#e2e8f0",
+            insertbackground="white"
+        )
         self.details.pack(fill=tk.BOTH, expand=True)
         
     def add_packet(self, num, src, dst, proto, time_rel="", length="", src_port="",dst_port="", original_idx = None ):
